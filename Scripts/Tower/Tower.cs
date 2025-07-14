@@ -5,14 +5,18 @@ using UnityEngine;
 public class Tower : MonoBehaviour
 {
     [Header("References")]
+
     [SerializeField] private Transform turretRotationPoint;
+    [SerializeField] private Transform bulletSpawnPoint;
     [SerializeField] private LayerMask enemyMask;
+    [SerializeField] public UIManager uiManager; // Reference to the UIManager
 
     [Header("Bullet Properties")]
     [SerializeField] private GameObject bulletPrefab; // Reference to the bullet prefab
     [SerializeField] private float bulletSpeed; // Speed of the bullet
 
     [Header("Tower Properties")]
+    [SerializeField] public float maxHealth;
     [SerializeField] public float health;
     [SerializeField] public float attackDamage;
     [SerializeField] public float attackRange;
@@ -21,12 +25,15 @@ public class Tower : MonoBehaviour
 
     private Transform target;
 
+
     private float shootTimer = 1f; // Timer to control shooting frequency
 
     // Start is called before the first frame update
     void Start()
     {
         Debug.Log("Your Tower has Spawned!");
+        health = maxHealth; // Initialize health
+        uiManager.UpdateTowerUI(this); // Update the UI with initial health
     }
 
     // Update is called once per frame
@@ -68,7 +75,7 @@ public class Tower : MonoBehaviour
     {
         if (target == null) return;
 
-        GameObject bulletObject = Instantiate(bulletPrefab, turretRotationPoint.position, Quaternion.identity);
+        GameObject bulletObject = Instantiate(bulletPrefab, bulletSpawnPoint.position, Quaternion.identity);
         Bullet bullet = bulletObject.GetComponent<Bullet>();
         bullet.SetTarget(target);
         bullet.SetSpeed(bulletSpeed); // Set bullet speed
@@ -153,6 +160,9 @@ public class Tower : MonoBehaviour
     public void TakeDamage(float damage)
     {
         health -= damage;
+        // Update the UI with the new health value
+        uiManager.UpdateTowerUI(this); // Assuming UIManager is a singleton
+
         if (health <= 0)
         {
             Die();

@@ -7,7 +7,6 @@ public class RoundManager : MonoBehaviour
     [Header("Round Settings")]
     [SerializeField] private bool roundActive = true;
 
-
     [Header("Tower Spawner")]
     [SerializeField] private GameObject towerPrefab;
     [SerializeField] private Transform spawnPoint;
@@ -16,12 +15,16 @@ public class RoundManager : MonoBehaviour
     [SerializeField] private int currentWave = 1;
     [SerializeField] private float waveDuration = 30f; // Duration of each wave
     [SerializeField] private float waveInterval = 5f; // Time between waves.
-    private float waveEndTime;
-    private float waveStartTime;
+    [SerializeField] private float waveEndTime;
+    [SerializeField] private float waveStartTime;
+    [SerializeField] private bool activeWave = false;
 
     [Header("Enemy Spawner")]
     [SerializeField] private EnemySpawner enemySpawner;
     [SerializeField] private float enemySpawnRateMultiplier = 0.5f;
+
+    // Tower Instance
+    private Tower tower;
 
     // Start is called before the first frame update
     void Start()
@@ -51,19 +54,17 @@ public class RoundManager : MonoBehaviour
         waveEndTime = Time.time + waveDuration;
         waveStartTime = Time.time;
 
-        // Update spawn ratios for the current wave
-        // UpdateSpawnRatios(); TODO: Implement this method to adjust spawn ratios based on wave number
-        //SpawnBoss(); // TODO: Spawns boss at start of round
-
         while (Time.time < waveEndTime)
         {
             if (!roundActive) yield break;
+            activeWave = true;
             enemySpawner.SpawnEnemy(spawnPoint);
             yield return new WaitForSeconds(1f / EnemiesPerSecond());
         }
 
         // End the wave
-        waveStartTime = Time.time; // Set waveStartTime for the between-waves period
+        activeWave = false;
+        waveStartTime = Time.time; // Set waveStartTime for the interval period
         yield return new WaitForSeconds(waveInterval);
 
         // Start the next wave
@@ -79,13 +80,47 @@ public class RoundManager : MonoBehaviour
             return;
         }
 
-        Instantiate(towerPrefab, spawnPoint.position, Quaternion.identity);
+        GameObject towerObj = Instantiate(towerPrefab, spawnPoint.position, Quaternion.identity);
+        tower = towerObj.GetComponent<Tower>();
+        tower.uiManager = FindObjectOfType<UIManager>(); // Or pass the reference directly if you have it
+
         currentWave = 1;
     }
 
     private float EnemiesPerSecond()
     {
         return Mathf.Max(1, currentWave * enemySpawnRateMultiplier); // Adjust this formula as needed
+    }
+
+    // GETTERS
+    public int GetCurrentWave()
+    {
+        return currentWave;
+    }
+
+    public bool IsActiveWave()
+    {
+        return activeWave;
+    }
+
+    public float GetTimeBetweenWavesRemaining()
+    {
+        return Mathf.Max(0, waveStartTime + waveInterval - Time.time);
+    }
+
+    public float GetWaveInterval()
+    {
+        return waveInterval;
+    }
+
+    public float GetWaveDuration()
+    {
+        return waveDuration;
+    }
+
+    public float GetWaveTimeRemaining()
+    {
+        return Mathf.Max(0, waveEndTime - Time.time);
     }
 
 
