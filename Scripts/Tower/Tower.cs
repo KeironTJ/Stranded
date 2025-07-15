@@ -5,10 +5,10 @@ using UnityEngine;
 public class Tower : MonoBehaviour
 {
     [Header("References")]
-
     [SerializeField] private Transform turretRotationPoint;
     [SerializeField] private Transform bulletSpawnPoint;
     [SerializeField] private LayerMask enemyMask;
+    [SerializeField] public RoundManager roundManager; // Reference to the RoundManager
     [SerializeField] public UIManager uiManager; // Reference to the UIManager
 
     [Header("Bullet Properties")]
@@ -16,11 +16,11 @@ public class Tower : MonoBehaviour
     [SerializeField] private float bulletSpeed; // Speed of the bullet
 
     [Header("Tower Properties")]
-    [SerializeField] public float maxHealth;
-    [SerializeField] public float health;
-    [SerializeField] public float attackDamage;
-    [SerializeField] public float attackRange;
-    [SerializeField] public float attackSpeed; // Bullets per second
+    public float maxHealth;
+    public float health;
+    public float attackDamage;
+    public float attackRange;
+    public float attackSpeed; // Bullets per second
     [SerializeField] private float rotationSpeed; // Speed of turret rotation
 
     private Transform target;
@@ -77,7 +77,7 @@ public class Tower : MonoBehaviour
 
         GameObject bulletObject = Instantiate(bulletPrefab, bulletSpawnPoint.position, Quaternion.identity);
         Bullet bullet = bulletObject.GetComponent<Bullet>();
-        bullet.SetTarget(target);
+        bullet.SetDirection(target.position);
         bullet.SetSpeed(bulletSpeed); // Set bullet speed
         bullet.SetDamage(attackDamage); // Set attack damage
 
@@ -173,8 +173,6 @@ public class Tower : MonoBehaviour
     {
         // Handle tower death (e.g., play animation, drop loot, etc.)
         Debug.Log("Tower destroyed!");
-        Destroy(gameObject);
-
-        //CREATE LOGIC TO END ROUND HERE
+        roundManager.StopRound(); 
     }
 }

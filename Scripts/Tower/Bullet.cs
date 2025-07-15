@@ -8,26 +8,21 @@ public class Bullet : MonoBehaviour
     [SerializeField] private Rigidbody2D rb; 
 
     [Header("Bullet Properties")]
-    [SerializeField] private Transform target;
     [SerializeField] private float bulletSpeed;
     [SerializeField] private float attackDamage;
 
-    public void SetTarget(Transform _target) 
+    private Vector2 moveDirection;
+
+
+    // Call this when firing the bullet, passing the target's position at that moment
+    public void SetDirection(Vector2 targetPosition)
     {
-        target = _target;
+        moveDirection = (targetPosition - (Vector2)transform.position).normalized;
     }
 
     private void FixedUpdate()
     {
-        if (target == null)
-        {
-            Destroy(gameObject); // Optionally destroy the bullet if its target is gone
-            return;
-        }
-
-        Vector2 direction = (target.position - transform.position).normalized;
-
-        rb.velocity = direction * bulletSpeed;
+        rb.velocity = moveDirection * bulletSpeed;
     }
 
     public void SetSpeed(float speed)
@@ -40,9 +35,9 @@ public class Bullet : MonoBehaviour
         attackDamage = damage;
     }
 
-    private void OnTriggerEnter2D(Collider2D target)
+    private void OnTriggerEnter2D(Collider2D collider)
     {
-        Enemy enemy = target.GetComponent<Enemy>();
+        Enemy enemy = collider.GetComponent<Enemy>();
         if (enemy != null)
         {
             enemy.TakeDamage(attackDamage); // Pass the bullet's damage value

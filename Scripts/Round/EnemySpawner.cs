@@ -7,11 +7,14 @@ public class EnemySpawner : MonoBehaviour
     [Header("Enemy Spawner")]
     [SerializeField] private GameObject[] enemyPrefabs;
 
+    [Header("Enemy Manager")]
+    [SerializeField] private EnemyManager enemyManager;
+
 
     // Start is called before the first frame update
     void Start()
     {
-
+        
     }
 
     // Update is called once per frame
@@ -22,6 +25,12 @@ public class EnemySpawner : MonoBehaviour
     
     public void SpawnEnemy(Transform spawnPoint)
     {
+        if (!enemyManager.CanSpawn())
+        {
+            Debug.Log("Max enemies reached, cannot spawn more.");
+            return;
+        }
+
         GameObject enemyPrefab = GetEnemyPrefab();
         if (enemyPrefab == null)
         {
@@ -36,8 +45,15 @@ public class EnemySpawner : MonoBehaviour
         Enemy enemyScript = enemyInstance.GetComponent<Enemy>();
         if (enemyScript != null)
         {
-            enemyScript.Initialize(spawnPoint); // Assuming spawnPoint is the target tower
+            enemyScript.Initialize(spawnPoint); // spawnPoint is the target tower
+                                                // Register the enemy with the manager
+            enemyScript.enemyManager = enemyManager; // Set the enemy manager reference
+            
+
+            enemyManager.RegisterEnemy(enemyScript);
+
         }
+
         else
         {
             Debug.LogError("Enemy script not found on the spawned enemy prefab.");

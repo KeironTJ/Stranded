@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class RoundManager : MonoBehaviour
 {
+    public event System.Action OnTowerDestroyed;
+
     [Header("Round Settings")]
     [SerializeField] private bool roundActive = true;
 
@@ -39,12 +41,28 @@ public class RoundManager : MonoBehaviour
 
     }
 
+
+    // ROUND MANAGEMENT
     public void StartRound()
     {
         SpawnTower();
         StartCoroutine(StartWave());
     }
 
+    public void StopRound()
+    {
+        roundActive = false;
+        activeWave = false;
+        if (tower != null)
+        {
+            Destroy(tower.gameObject);
+        }
+
+        // Fire the event for any listeners (UI, audio, etc.)
+        OnTowerDestroyed?.Invoke();
+    }
+
+    // WAVE MANAGEMENT
     private IEnumerator StartWave()
     {
         if (!roundActive) yield break;
@@ -72,6 +90,15 @@ public class RoundManager : MonoBehaviour
         StartCoroutine(StartWave());
     }
 
+    private float EnemiesPerSecond()
+    {
+        return Mathf.Max(1, currentWave * enemySpawnRateMultiplier); // Adjust this formula as needed
+    }
+
+
+
+    // Method to spawn the tower
+
     public void SpawnTower()
     {
         if (towerPrefab == null)
@@ -83,14 +110,12 @@ public class RoundManager : MonoBehaviour
         GameObject towerObj = Instantiate(towerPrefab, spawnPoint.position, Quaternion.identity);
         tower = towerObj.GetComponent<Tower>();
         tower.uiManager = FindObjectOfType<UIManager>(); // Or pass the reference directly if you have it
+        tower.roundManager = this; // Pass the RoundManager reference to the tower
 
         currentWave = 1;
     }
 
-    private float EnemiesPerSecond()
-    {
-        return Mathf.Max(1, currentWave * enemySpawnRateMultiplier); // Adjust this formula as needed
-    }
+
 
     // GETTERS
     public int GetCurrentWave()

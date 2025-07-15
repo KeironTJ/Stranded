@@ -6,6 +6,7 @@ public class Enemy : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Rigidbody2D rb;
+    [SerializeField] public EnemyManager enemyManager;
 
     [Header("Enemy Properties")]
     [SerializeField] public float health;
@@ -58,7 +59,11 @@ public class Enemy : MonoBehaviour
 
     private void Die()
     {
-        // Handle enemy death (e.g., play animation, drop loot, etc.)
+        if (enemyManager != null)
+        {
+            enemyManager.UnregisterEnemy(this);
+        }
+        
         Destroy(gameObject);
     }
 

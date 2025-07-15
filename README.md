@@ -1,2 +1,2 @@
 # Stranded
-Stranged Tower Defence Game
+Stranded Tower Defence Game
