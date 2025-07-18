@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using StrandedDefence.Player;
 
 public class RoundManager : MonoBehaviour
 {
@@ -27,11 +28,13 @@ public class RoundManager : MonoBehaviour
 
     // Tower Instance
     private Tower tower;
+    private TowerData currentTowerData;
 
     // Start is called before the first frame update
     void Start()
     {
         // Spawn the tower at the start of the round
+        currentTowerData = GameManager.Instance.inGameTowerData;
         StartRound();
     }
 

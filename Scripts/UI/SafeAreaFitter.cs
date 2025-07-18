@@ -13,17 +13,17 @@ public class SafeAreaFitter : MonoBehaviour
 
     void Update()
     {
-#if UNITY_EDITOR
-        // Always update in editor for simulator support
-        ApplySafeArea();
-#else
-        if (Screen.safeArea != lastSafeArea || 
-            Screen.width != lastScreenSize.x || 
-            Screen.height != lastScreenSize.y)
-        {
-            ApplySafeArea();
-        }
-#endif
+        #if UNITY_EDITOR
+                // Always update in editor for simulator support
+                ApplySafeArea();
+        #else
+                if (Screen.safeArea != lastSafeArea || 
+                    Screen.width != lastScreenSize.x || 
+                    Screen.height != lastScreenSize.y)
+                {
+                    ApplySafeArea();
+                }
+        #endif
     }
 
     void ApplySafeArea()
