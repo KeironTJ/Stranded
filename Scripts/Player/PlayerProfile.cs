@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.IO;
 
 namespace StrandedDefence.Player
 {
@@ -10,10 +11,12 @@ namespace StrandedDefence.Player
     public class PlayerProfile
     {
         // Player Information
+        public string uniqueID; // Unique identifier for the profile
+        public DateTime creationDate; // Date when the profile was created
+        public DateTime lastModified; // Date when the profile was last modified
         public string playerName;
-        public int highestWaveReached;
 
-
+        // Player Currencies
         public int primaryCurrency;
         public int secondaryCurrency;
         public int thirdCurrency;
@@ -22,11 +25,6 @@ namespace StrandedDefence.Player
         // The player's MASTER tower (upgraded from the main menu)
         public TowerData masterTower;
 
-        // Add more fields as needed, e.g.:
-        // public List<UnlockedSkill> unlockedSkills;
-        // public int highestWaveReached;
-        // public string playerName;
-
         public PlayerProfile()
         {
             primaryCurrency = 0;
@@ -34,9 +32,10 @@ namespace StrandedDefence.Player
             thirdCurrency = 0;
             forthCurrency = 0;
 
-            //Update UI
-
-
+            uniqueID = Guid.NewGuid().ToString();
+            playerName = uniqueID; // Default to unique ID if no name is set
+            creationDate = DateTime.Now;
+            lastModified = DateTime.Now;
 
             masterTower = new TowerData();
         }

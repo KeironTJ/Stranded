@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using StrandedDefence.Player;
 
 public class Tower : MonoBehaviour
 {
@@ -15,20 +16,40 @@ public class Tower : MonoBehaviour
     [SerializeField] private GameObject bulletPrefab; // Reference to the bullet prefab
     [SerializeField] private float bulletSpeed; // Speed of the bullet
 
-    [Header("Tower Properties")]
-    public float maxHealth;
-    public float health;
+    [Header("Tower Attack Properties")]
     public float attackDamage;
     public float attackRange;
     public float attackSpeed; // Bullets per second
-    [SerializeField] private float rotationSpeed; // Speed of turret rotation
+    private float rotationSpeed; // Speed of turret rotation
+
+    [Header("Tower Defence Properties")]
+    public float maxHealth;
+    public float health;
+
+    [Header("Tower Economy Properties")]
 
     private Transform target;
-
-
     private float shootTimer = 1f; // Timer to control shooting frequency
 
     // Start is called before the first frame update
+
+    public void Initialize(TowerData data)
+    {
+        // Initialize Attack Properties
+        attackDamage = data.baseDamage;
+        attackRange = data.baseRange;
+        attackSpeed = data.baseFireRate;
+        rotationSpeed = data.rotationSpeed;
+
+        // Initialize Defence Properties
+        health = data.baseHealth;
+        maxHealth = health;
+
+        // Initialize Economy Properties
+        
+
+    }
+
     void Start()
     {
         Debug.Log("Your Tower has Spawned!");

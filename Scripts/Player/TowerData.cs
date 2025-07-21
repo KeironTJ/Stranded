@@ -9,19 +9,44 @@ namespace StrandedDefence.Player
     [Serializable]
     public class TowerData
     {
+        // Tower attributes
         public int level;
-        public float damage;
-        public float fireRate;
-        public float range;
+        public int towerXP;
+
+        // Attack attributes
+        public float baseDamage;
+        public float baseFireRate;
+        public float baseRange;
+        public float rotationSpeed;
+
+        // Defense attributes
+        public float baseHealth;
+
+        // Economy attributes
+        public float primaryCurrencyPerKill;
+        public float secondaryCurrencyPerKill;
 
         // Add more attributes or skills as needed
 
         public TowerData()
         {
+            // Initialize Tower Attributes
             level = 1;
-            damage = 10f;
-            fireRate = 1f;
-            range = 5f;
+            towerXP = 0;
+
+            // Initialize Attack Attributes
+            baseDamage = 1f;
+            baseFireRate = 1f;
+            baseRange = 5f;
+            rotationSpeed = 1f;
+
+            // Initialize Defense Attributes
+            baseHealth = 10f;
+
+            // Initialize Economy Attributes
+            primaryCurrencyPerKill = 1f;
+            secondaryCurrencyPerKill = 0.1f;
+
         }
 
         // Optionally, add a method to clone/copy this data

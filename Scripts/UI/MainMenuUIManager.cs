@@ -7,6 +7,9 @@ public class MainMenuUIManager : MonoBehaviour
     [Header("UI Elements")]
     [SerializeField] private GameObject mainMenuPanel;
 
+    // Player Profile UI elements
+    [SerializeField] private TMPro.TextMeshProUGUI playerNameText;
+
     // Currency UI elements
     [SerializeField] private TMPro.TextMeshProUGUI primaryCurrencyText;
     [SerializeField] private TMPro.TextMeshProUGUI secondaryCurrencyText;
@@ -16,7 +19,15 @@ public class MainMenuUIManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // Initialize UI elements
+        UpdateCurrencyUI(
+            PlayerProfileManager.CurrentProfile.primaryCurrency,
+            PlayerProfileManager.CurrentProfile.secondaryCurrency,
+            PlayerProfileManager.CurrentProfile.thirdCurrency,
+            PlayerProfileManager.CurrentProfile.forthCurrency
+        );
 
+        playerNameText.text = PlayerProfileManager.CurrentProfile.playerName;
     }
 
     // Update is called once per frame
