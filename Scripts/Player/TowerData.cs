@@ -2,58 +2,81 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-
+using System.Linq;
 
 namespace StrandedDefence.Player
 {
     [Serializable]
-    public class TowerData
+    public class AttributeState
     {
-        // Tower attributes
-        public int level;
-        public int towerXP;
+        [SerializeField] private TowerAttribute attribute; // Reference to ScriptableObject asset
+        [SerializeField] private int level;
+        [SerializeField] private int inRoundLevel;
 
-        // Attack attributes
-        public float baseDamage;
-        public float baseFireRate;
-        public float baseRange;
-        public float rotationSpeed;
+        public TowerAttribute Attribute => attribute;
+        public int Level => level;
+        public int InRoundLevel => inRoundLevel;
 
-        // Defense attributes
-        public float baseHealth;
-
-        // Economy attributes
-        public float primaryCurrencyPerKill;
-        public float secondaryCurrencyPerKill;
-
-        // Add more attributes or skills as needed
-
-        public TowerData()
+        public AttributeState(TowerAttribute attribute, int level = 0, int inRoundLevel = 0)
         {
-            // Initialize Tower Attributes
-            level = 1;
-            towerXP = 0;
-
-            // Initialize Attack Attributes
-            baseDamage = 1f;
-            baseFireRate = 1f;
-            baseRange = 5f;
-            rotationSpeed = 1f;
-
-            // Initialize Defense Attributes
-            baseHealth = 10f;
-
-            // Initialize Economy Attributes
-            primaryCurrencyPerKill = 1f;
-            secondaryCurrencyPerKill = 0.1f;
-
-        }
-
-        // Optionally, add a method to clone/copy this data
-        public TowerData Clone()
-        {
-            return (TowerData)this.MemberwiseClone();
+            this.attribute = attribute;
+            this.level = level;
+            this.inRoundLevel = inRoundLevel;
         }
     }
-    
+
+    [Serializable]
+    public class AttributeGroup
+    {
+        [SerializeField] private string groupName;
+        [SerializeField] private List<AttributeState> attributes = new List<AttributeState>();
+
+        public string GroupName => groupName;
+        public IReadOnlyList<AttributeState> Attributes => attributes;
+
+        public AttributeGroup(string groupName)
+        {
+            this.groupName = groupName;
+        }
+
+        public void AddAttribute(AttributeState attributeState)
+        {
+            if (!attributes.Any(a => a.Attribute == attributeState.Attribute))
+            {
+                attributes.Add(attributeState);
+            }
+        }
+    }
+
+    [Serializable]
+    public class TowerData
+    {
+        [SerializeField] private string name;
+        [SerializeField] private List<AttributeGroup> groups = new List<AttributeGroup>();
+
+        public string Name => name;
+        public IReadOnlyList<AttributeGroup> Groups => groups;
+
+        public TowerData(string name)
+        {
+            this.name = name;
+        }
+
+        public AttributeGroup GetOrCreateGroup(string groupName)
+        {
+            var group = groups.FirstOrDefault(g => g.GroupName == groupName);
+            if (group == null)
+            {
+                group = new AttributeGroup(groupName);
+                groups.Add(group);
+            }
+            return group;
+        }
+
+        public void AddAttributeToGroup(string groupName, AttributeState attributeState)
+        {
+            var group = GetOrCreateGroup(groupName);
+            group.AddAttribute(attributeState);
+        }
+    }
 }

@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d590c8860630c24ba8e9d82f2ebf814, type: 3}
+  m_Name: AttackSpeed
+  m_EditorClassIdentifier: 
+  attributeName: attackSpeed
+  baseValue: 5
+  unlocked: 1
+  level: 0
+  maxLevel: 0
+  bonusPerLevel: 0
+  basePrimaryCost: 0
+  baseSecondaryCost: 0
+  researchUnlocked: 0
+  researchLevel: 0
+  maxResearchLevel: 0
+  baseResearchCost: 0

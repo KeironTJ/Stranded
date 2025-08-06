@@ -52,7 +52,7 @@ public class UIManager : MonoBehaviour
     
     public void UpdateTowerUI(Tower tower)
     {
-        towerHealthText.text = "Health: " + NumberManager.FormatLargeNumber(tower.health);
-        towerHealthSlider.value = tower.health / tower.maxHealth; // Assuming maxHealth is defined in Tower
+        towerHealthText.text = "Health: " + NumberManager.FormatLargeNumber(tower.currentHealth);
+        towerHealthSlider.value = tower.currentHealth / tower.maxHealth; // Assuming maxHealth is defined in Tower
     }
 }

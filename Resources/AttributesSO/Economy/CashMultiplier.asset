@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1d590c8860630c24ba8e9d82f2ebf814, type: 3}
-  m_Name: Health
+  m_Name: CashMultiplier
   m_EditorClassIdentifier: 
-  attributeName: 
-  baseValue: 0
-  workshopLevel: 0
-  maxWorkshopLevel: 0
-  workshopBonusPerLevel: 0
-  baseWorkshopCost: 0
-  workshopCostMultiplier: 0
+  attributeName: cashMultiplier
+  baseValue: 1
+  unlocked: 0
+  level: 0
+  maxLevel: 0
+  bonusPerLevel: 0
+  basePrimaryCost: 0
+  baseSecondaryCost: 0
+  researchUnlocked: 0
   researchLevel: 0
   maxResearchLevel: 0
-  researchMultiplierPerLevel: 0
   baseResearchCost: 0
-  researchCostMultiplier: 0

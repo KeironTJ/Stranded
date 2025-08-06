@@ -7,7 +7,13 @@ using StrandedDefence.Player;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
-    public TowerData inGameTowerData { get; private set; }
+    [SerializeField] private TowerData inGameTowerDataBackingField;
+
+    public TowerData inGameTowerData
+    {
+        get => inGameTowerDataBackingField;
+        private set => inGameTowerDataBackingField = value;
+    }
 
 
     private void Awake()
@@ -29,10 +35,17 @@ public class GameManager : MonoBehaviour
 
     public void StartRound()
     {
+        // Assign the player's masterTower to inGameTowerData before loading the round scene
+        var profile = PlayerProfileManager.CurrentProfile;
+        if (profile != null)
+        {
+            inGameTowerData = profile.masterTower;
+        }
+        else
+        {
+            return;
+        }
 
-        // Clone the master tower for this round
-        inGameTowerData = PlayerProfileManager.CurrentProfile.masterTower.Clone();
-        
         // Load the round scene
         UnityEngine.SceneManagement.SceneManager.LoadScene("RoundScene");
     }

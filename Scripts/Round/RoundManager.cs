@@ -33,8 +33,21 @@ public class RoundManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // Spawn the tower at the start of the round
+        StartCoroutine(WaitForTowerDataAndStart());
+    }
+
+    private IEnumerator WaitForTowerDataAndStart()
+    {
+        while (GameManager.Instance.inGameTowerData == null)
+            yield return null;
+
         currentTowerData = GameManager.Instance.inGameTowerData;
+        Debug.Log("RoundManager: currentTowerData null? " + (currentTowerData == null));
+        if (currentTowerData == null)
+        {
+            Debug.LogError("currentTowerData is null! Did you load the scene directly?");
+            yield break;
+        }
         StartRound();
     }
 
@@ -112,10 +125,29 @@ public class RoundManager : MonoBehaviour
 
         GameObject towerObj = Instantiate(towerPrefab, spawnPoint.position, Quaternion.identity);
         tower = towerObj.GetComponent<Tower>();
-        tower.uiManager = FindObjectOfType<UIManager>(); // Or pass the reference directly if you have it
-        tower.roundManager = this; // Pass the RoundManager reference to the tower
+        tower.uiManager = FindObjectOfType<UIManager>();
+        tower.roundManager = this;
+
+        // Sync inRoundLevel to level for all attributes before passing to the tower
+        SyncInRoundLevelsToMenu(currentTowerData);
+
+        // Pass the TowerData to the Tower
+        tower.Initialize(currentTowerData);
 
         currentWave = 1;
+    }
+
+    // Helper method to sync inRoundLevel to level
+    private void SyncInRoundLevelsToMenu(TowerData towerData)
+    {
+        if (towerData == null)
+        {
+            Debug.LogError("TowerData is null in SyncInRoundLevelsToMenu!");
+            return;
+        }
+        foreach (var group in towerData.groups)
+            foreach (var attr in group.attributes)
+                attr.inRoundLevel = attr.level;
     }
 
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.IO;
+using System.Linq;
 
 namespace StrandedDefence.Player
 {
@@ -37,7 +38,52 @@ namespace StrandedDefence.Player
             creationDate = DateTime.Now;
             lastModified = DateTime.Now;
 
-            masterTower = new TowerData();
+            masterTower = BuildTowerDataFromResources();
+            // Do NOT reference PlayerProfileManager.CurrentProfile here!
+        }
+
+        public TowerData BuildTowerDataFromResources()
+        {
+            var towerData = new TowerData("Master Tower");
+
+            var groupDefs = new Dictionary<string, string>
+            {
+                { "Attack", "AttributesSO/Attack" },
+                { "Defence", "AttributesSO/Defence" },
+                { "Economy", "AttributesSO/Economy" }
+            };
+
+            foreach (var kvp in groupDefs)
+            {
+                TowerAttribute[] attributes = Resources.LoadAll<TowerAttribute>(kvp.Value);
+                foreach (var attr in attributes)
+                {
+                    var attributeState = new AttributeState(attr);
+                    towerData.AddAttributeToGroup(kvp.Key, attributeState);
+                }
+            }
+
+            return towerData;
+        }
+
+        public void UpgradeTowerDataToLatest(TowerData towerData)
+        {
+            var groupDefs = new Dictionary<string, string>
+            {
+                { "Attack", "AttributesSO/Attack" },
+                { "Defence", "AttributesSO/Defence" },
+                { "Economy", "AttributesSO/Economy" }
+            };
+
+            foreach (var kvp in groupDefs)
+            {
+                TowerAttribute[] attributes = Resources.LoadAll<TowerAttribute>(kvp.Value);
+                foreach (var attr in attributes)
+                {
+                    var attributeState = new AttributeState(attr);
+                    towerData.AddAttributeToGroup(kvp.Key, attributeState);
+                }
+            }
         }
     }
 

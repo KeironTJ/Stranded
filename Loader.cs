@@ -17,9 +17,6 @@ public class Loader : MonoBehaviour
 
         PlayerProfileManager.LoadProfile();
 
-        // Load player profile (GameManager will handle this in Start)
-        // Optionally, you can call PlayerProfileManager.LoadProfile() here if needed
-
         // Load the Main Menu after setup
         SceneManager.LoadScene("MainMenuScene");
     }
